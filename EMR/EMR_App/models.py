@@ -47,5 +47,8 @@ class Procedure(models.Model):
 
     def save(self, *args, **kwargs):    
         self.update_date = timezone.now()
+        self.procedure_date=self.update_date.date()
+        self.procedure_time=self.update_date.time()
         super(Procedure, self).save(*args, **kwargs)
+        
 
