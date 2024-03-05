@@ -3,7 +3,7 @@ from .models import Patient,Procedure
 
 def check_mobile_number(value):
     if len(value)!=10:
-            raise  serializers.ValidationError('Invalid mobile_number Length should be 10 ')
+            raise  serializers.ValidationError('Invalid mobile_number Length should be 10')
     
 
 class PatientSerializer(serializers.ModelSerializer):
@@ -16,7 +16,7 @@ class PatientSerializer(serializers.ModelSerializer):
     def create(self,validate_data):
         
         
-        gen=['male','female','others', ]    
+        gen=['male','female','others']    
         if len(validate_data['mobile_number'])!=10:
             raise  serializers.ValidationError('Invalid mobile_number Length should be 10 ')
         
