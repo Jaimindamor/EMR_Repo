@@ -23,28 +23,6 @@ class PatientSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Invalid pincode Length should be 6 ###")
         return data
 
-    # # field level Validation
-    # def validate_mobile_number(self,value):
-    #     if len(value)!=10:
-    #         raise serializers.ValidationError("Invalid mobile_number Length should be 10 !!!!!!!")
-    #     return value
-    
-    # def validate_gender(self,value):
-    #     gen=['male','female','others']   
-    #     if value not in gen:
-    #         raise serializers.ValidationError(f"Invalid gender choose from this :{ gen } !!!!!!")
-    #     return value
-    
-    # def validate_emergency_contant_mobile_number(self,value):
-    #     if len(value)!=10:
-    #         raise serializers.ValidationError("Invalid emergency_contact_mobile_number Length should be 10 !!!!!!!")
-    #     return value
-    
-    # def validate_pincode(self,value):
-    #     if len(value)!=6:
-    #         raise serializers.ValidationError("Invalid pincode Length should be 6 !!!!!!!")
-    #     return value
-    
 class ProcedureSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -59,13 +37,6 @@ class ProcedureSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(f"Invalid status choose from this :{ sta } ###")
         return data
         
-    # # field level Validation
-    # def validate_status(self,value):
-    #     sta=['preparation ', 'in-progress ' ,'not-done' , 'on-hold','stopped', 'completed ', 'entered-in-error', 'unknown']    
-    #     if value not in sta:
-    #         raise serializers.ValidationError(f"Invalid status choose from this :{ sta } !!!!!!!!!")
-    #     return value
-    
     
         
         
