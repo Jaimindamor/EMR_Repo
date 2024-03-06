@@ -13,6 +13,7 @@ class PatientAPI(APIView):
         if id is not None:
             try:
                 patient=Patient.objects.get(id=id)
+                print(patient)
                 serializer=PatientSerializer(patient)
                 return Response(serializer.data,status=HTTP_200_OK)
             except:    
