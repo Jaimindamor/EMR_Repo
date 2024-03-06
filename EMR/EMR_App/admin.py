@@ -5,7 +5,7 @@ from .models import Patient,Procedure
 # Register your models here.
 @admin.register(Patient)
 class PatientAdmin(admin.ModelAdmin):
-    list_display=['id','first_name','last_name','mobile_number','address','gender','birthdate','emial','country_code','city',
+    list_display=['id','first_name','last_name','mobile_number','address','gender','birthdate','email','country_code','city',
                   'state','pincode','emergency_contact_name','emergency_contact_mobile_number','language']
     
     
