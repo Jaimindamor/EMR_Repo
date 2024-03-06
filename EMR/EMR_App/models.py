@@ -23,7 +23,6 @@ class Patient(models.Model):
     create_date = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     update_date = models.DateTimeField(auto_now=True,blank=True, null=True)
 
-
     def save(self, *args, **kwargs):    
         self.update_date = timezone.now()
         super(Patient, self).save(*args, **kwargs)
