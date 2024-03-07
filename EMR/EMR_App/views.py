@@ -13,7 +13,6 @@ class PatientAPI(APIView):
         if id is not None:
             try:
                 patient=Patient.objects.get(id=id)
-                print(patient)
                 serializer=PatientSerializer(patient)
                 return Response(serializer.data,status=HTTP_200_OK)
             except:    
@@ -86,7 +85,6 @@ class ProcedureAPI(APIView):
             
     def put(self,request,format=None):
         pythondata=request.data
-        
         if request.FILES:
             pythondata['report']=request.FILES['report']
         id=request.data.get('id')
@@ -108,6 +106,8 @@ class ProcedureAPI(APIView):
     def post(self,request,format=None): 
         python_data=request.data
         if python_data:
+            if request.FILES:
+                python_data['report']=request.FILES['report']
             python_data['user']=request.user.id
             serializer=ProcedureSerializer(data=python_data)
             if serializer.is_valid():

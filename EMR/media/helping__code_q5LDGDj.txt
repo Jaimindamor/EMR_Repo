@@ -1,0 +1,212 @@
+# Patient------------models CRUD OPERATIONS !!!!!!!!!!!!!!!!!!!!!!!!
+@csrf_exempt
+def retrieve_patient_info(request):
+    if request.method=='POST':
+        json_data=request.body
+        stream=io.BytesIO(json_data)
+        print("stream,",stream)
+        pythondata=JSONParser().parse(stream)
+        id=pythondata.get('id',None)
+        if id is not None:
+            pat=Patient.objects.get(id=id)
+            serializer=PatientSerializer(pat)
+            json_data=JSONRenderer().render(serializer.data)
+            return HttpResponse(json_data,content_type='application/text')
+        
+        patient=Patient.objects.all()
+        serializer=PatientSerializer(patient,many=True)
+        json_data=JSONRenderer().render(serializer.data)
+        return HttpResponse(json_data,content_type='application/text')
+
+    if request.method=='GET':
+        json_data=request.body
+        stream=io.BytesIO(json_data)
+        pythondata=JSONParser().parse(stream)
+        id =pythondata.get('id',None)
+        if id is not None:
+            patient=Patient.objects.get(id=id)
+            serializer=PatientSerializer(patient)
+            json_data=JSONRenderer().render(serializer.data)
+            return HttpResponse(json_data,content_type='application/text')
+        
+        patient=Patient.objects.all()
+        serializer=PatientSerializer(patient,many=True)
+        json_data=JSONRenderer().render(serializer.data)
+        return HttpResponse(json_data,content_type='application/text')
+@csrf_exempt       
+def create_Patient_info(request):
+    if request.method=='POST':
+        json_data=request.body
+        stream=io.BytesIO(json_data)
+        pythondata=JSONParser().parse(stream)
+        print(pythondata)
+        serializer=PatientSerializer(data=pythondata)
+        
+        if serializer.is_valid():
+            serializer.save()
+            res={'msg':'Data created !!!'}
+            json_data=JSONRenderer().render(res)
+            return HttpResponse(json_data,content_type='application/text')
+        
+        res={'msg':'Data not  created !!!'}
+        json_data=JSONRenderer().render(res)
+        return HttpResponse(json_data,content_type='application/text')
+        
+    if request.method=='GET':
+        json_data=request.body
+        stream=io.BytesIO(json_data)
+        pythondata=JSONParser().parse(stream)
+        print(pythondata)
+        serializer=PatientSerializer(data=pythondata)
+        
+        if serializer.is_valid():
+            serializer.save()
+            res={'msg':'Data created !!!'}
+            json_data=JSONRenderer().render(res)
+            return HttpResponse(json_data,content_type='application/text')
+        
+        res={'msg':'Data not  created !!!'}
+        json_data=JSONRenderer().render(res)
+        return HttpResponse(json_data,content_type='application/text')
+    
+@csrf_exempt       
+def delete_Patient_info(request):  
+    if request.method=='DELETE':
+        json_data=request.body
+        stream=io.BytesIO(json_data)
+        pythondata=JSONParser().parse(stream)
+        id=pythondata.get('id',None)
+        if id is not None:
+            patient=Patient.objects.get(id=id)
+            if patient:
+                patient.delete()
+                res={'msg':'Data Deleted !!!'}
+                json_data=JSONRenderer().render(res)
+                return HttpResponse(json_data,content_type='application/text')
+            else:
+                res={'msg':'No Data Found !!!'}
+                json_data=JSONRenderer().render(res)
+                return HttpResponse(json_data,content_type='application/text')
+            
+        res={'msg':'Null ID  !!!'}
+        json_data=JSONRenderer().render(res)
+        return HttpResponse(json_data,content_type='application/text')
+    
+    if request.method=='POST':
+        json_data=request.body
+        stream=io.BytesIO(json_data)
+        pythondata=JSONParser().parse(stream)
+        id=pythondata.get('id',None)
+        if id is not None:
+            patient=Patient.objects.get(id=id)
+            if patient:
+                patient.delete()
+                res={'msg':'Data Deleted !!!'}
+                json_data=JSONRenderer().render(res)
+                return HttpResponse(json_data,content_type='application/text')
+            else:
+                res={'msg':'No Data Found !!!'}
+                json_data=JSONRenderer().render(res)
+                return HttpResponse(json_data,content_type='application/text')
+            
+        res={'msg':'Null ID  !!!'}
+        json_data=JSONRenderer().render(res)
+        return HttpResponse(json_data,content_type='application/text')
+     
+    if request.method=='GET':
+        json_data=request.body
+        stream=io.BytesIO(json_data)
+        pythondata=JSONParser().parse(stream)
+        id=pythondata.get('id',None)
+        if id is not None:
+            patient=Patient.objects.get(id=id)
+            if patient:
+                patient.delete()
+                res={'msg':'Data Deleted !!!'}
+                json_data=JSONRenderer().render(res)
+                return HttpResponse(json_data,content_type='application/text')
+            else:
+                res={'msg':'No Data Found !!!'}
+                json_data=JSONRenderer().render(res)
+                return HttpResponse(json_data,content_type='application/text')
+            
+        res={'msg':'Null ID  !!!'}
+        json_data=JSONRenderer().render(res)
+        return HttpResponse(json_data,content_type='application/text')
+                    
+@csrf_exempt       
+def update_Patient_info(request):  
+    if request.method=='PUT':
+        json_data=request.body
+        stream=io.BytesIO(json_data)
+        pythondata=JSONParser().parse(stream)
+        print(f'pythondata = {pythondata}')
+        id=pythondata.get('id')
+        patient=Patient.objects.get(id=id)
+        serializer=PatientSerializer(instance=patient,data=pythondata,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            res={'msg':'data created !!!!'}
+            json_data=JSONRenderer().render(serializer.data)
+            return HttpResponse(json_data,content_type='application/text')
+    
+# Procedure------------models CRUD OPERATIONS !!!!!!!!!!!!!!!!!!!!!!!!
+
+def retrieve_procedure_info(request):
+    if request.method=='GET':
+        json_data=request.body
+        stream=io.BytesIO(json_data)
+        pythondata=JSONParser().parse(stream)
+        id=pythondata.get('id',None)
+        if id is not None:
+            procedure_data=Procedure.objects.get(id=id)
+            serializer=ProcedureSerializer(procedure_data)
+            json_data=JSONRenderer().render(serializer.data)
+            return HttpResponse(json_data,content_type='application/text')
+            
+@csrf_exempt
+def create_procedure_info(request):
+    if request.method=='POST':
+        json_data=request.body
+        stream=io.BytesIO(json_data)
+        python_data=JSONParser().parse(stream)
+        serializer=ProcedureSerializer(data=python_data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            res={'msg':' data saved !!!!!!!!!!!'}
+            json_data=JSONRenderer().render(res)
+            return HttpResponse(json_data,content_type='application/text')
+ 
+@csrf_exempt       
+def delete_procedure_data(request):
+    if request.method=='DELETE':
+        json_data=request.body
+        stream=io.BytesIO(json_data)
+        pythondata=JSONParser().parse(stream)
+        id=pythondata.get('id',None)
+        if id is not None:
+            procedure_data=Procedure.objects.get(id=id)
+            procedure_data.delete()
+            res={'msg':' Data Deleted !!!!!!!!!'}
+            json_data=JSONRenderer().render(res)
+            return HttpResponse(json_data,content_type='application/text')
+
+
+@csrf_exempt
+def update_procedure_data(request):
+    if request.method=='PUT':
+        json_data=request.body
+        stream=io.BytesIO(json_data)
+        pythondata=JSONParser().parse(stream)
+        id=pythondata.get('id',None)
+
+        procedure_data=Procedure.objects.get(id=id)
+        serializer=ProcedureSerializer(instance=procedure_data,data=pythondata,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            res={'msg':' Data Updated !!!!!!!!!'}
+            json_data=JSONRenderer().render(res)
+            return HttpResponse(json_data,content_type='application/text')
+                
+        

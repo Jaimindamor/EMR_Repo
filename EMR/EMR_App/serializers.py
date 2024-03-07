@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Patient,Procedure
-
+from django.core.validators import FileExtensionValidator
 class PatientSerializer(serializers.ModelSerializer): 
     class Meta:
         model=Patient
@@ -24,7 +24,7 @@ class PatientSerializer(serializers.ModelSerializer):
         return data
 
 class ProcedureSerializer(serializers.ModelSerializer):
-
+    report=serializers.FileField(validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
     class Meta:
         model=Procedure
         fields='__all__'
