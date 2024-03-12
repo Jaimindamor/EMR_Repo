@@ -29,7 +29,12 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+    
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -40,6 +45,7 @@ INSTALLED_APPS = [
     'EMR_App',
     'rest_framework_simplejwt',
     'rest_framework',
+    'rest_framework_simplejwt.token_blacklist'
 ]
 
 MIDDLEWARE = [
@@ -118,7 +124,10 @@ USE_I18N = True
 
 USE_TZ = True
 
-
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    # Add other authentication backends if needed
+]
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 

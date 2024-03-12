@@ -6,6 +6,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView,
 urlpatterns=[
 
     path('PatientAPI/',views.PatientAPI.as_view(),name="doctor"),
+    path('LoginAPI/',views.LoginAPI.as_view(),name="doctor"),
+    path('LogoutAPI/',views.LogoutAPI.as_view(),name="doctor"),
     path('ProcedureAPI/',views.ProcedureAPI.as_view(),name="None"),
     path('auth/',include('rest_framework.urls')),
     path('gettoken/',TokenObtainPairView.as_view(),name="token_obtain_pair"),
