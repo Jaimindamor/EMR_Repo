@@ -70,6 +70,7 @@ class PatientAPI(APIView):
             return Response("Id not Mentioned !!!!",status=HTTP_204_NO_CONTENT)
 
 class ProcedureAPI(APIView):
+    authentication_classes=[JWTAuthentication]
     permission_classes=[doctorpermission]
     def get(self,request,format=None):
         id=request.data.get('id')
