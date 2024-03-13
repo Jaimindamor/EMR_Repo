@@ -1,21 +1,21 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.permissions  import IsAuthenticated
 from .custompermission import doctorpermission
-from rest_framework.status import HTTP_202_ACCEPTED,HTTP_204_NO_CONTENT,HTTP_200_OK,HTTP_404_NOT_FOUND,HTTP_401_UNAUTHORIZED
+from rest_framework.status import HTTP_202_ACCEPTED,HTTP_204_NO_CONTENT,HTTP_200_OK,HTTP_404_NOT_FOUND,HTTP_401_UNAUTHORIZED,HTTP_205_RESET_CONTENT
 from .models import Patient,Procedure
 from .serializers import PatientSerializer,ProcedureSerializer
-import jwt
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 import base64
-from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView,TokenVerifyView
-from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.authentication import TokenAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
 # Create your views here.
 
 class PatientAPI(APIView):
-    permission_classes=[IsAuthenticated]
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[doctorpermission]
     def get(self,request,format=None):
         id=request.data.get('id')
         if id is not None:
@@ -27,7 +27,7 @@ class PatientAPI(APIView):
                 return Response("Patient Not found !!!!!",status=HTTP_404_NOT_FOUND)
         else:
             return Response("Id Not provided!!!!",status=HTTP_204_NO_CONTENT)
-        
+   
     def put(self,request,format=None):
         pythondata=request.data
         id=request.data.get('id')
@@ -113,9 +113,9 @@ class ProcedureAPI(APIView):
 
     def post(self,request,format=None): 
         python_data=request.data
+        if request.FILES:
+            python_data['report']=request.FILES['report']
         if python_data:
-            if request.FILES:
-                python_data['report']=request.FILES['report']
             python_data['user']=request.user.id
             serializer=ProcedureSerializer(data=python_data)
             if serializer.is_valid():
@@ -137,7 +137,7 @@ class ProcedureAPI(APIView):
                 return Response("Procedure Data Not found !!!!!!!",status=HTTP_404_NOT_FOUND)
         else:
             return Response("Id is not Mentioned !!!!!!!",status=HTTP_204_NO_CONTENT)
-
+            
 class LoginAPI(APIView):
     
     def post(self,request):
@@ -147,13 +147,19 @@ class LoginAPI(APIView):
         password = split_data[1]
         user=authenticate(username=username,password=password)
         refresh = RefreshToken.for_user(user)
-        return Response({'token': str(refresh)})
+        return Response({'token': str(refresh),
+                         'acces_token': str(refresh.access_token)})
 
 class LogoutAPI(APIView):
-    def post(self,request):
-        token = RefreshToken(request.data.get('info'))
-        if token:
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        try:
+            refresh_token = request.data["refresh_token"]
+            print(refresh_token)
+            token = RefreshToken(refresh_token)
+            print(token)
             token.blacklist()
-            return Response("Success")
-        return Response("Token is not provided !!!!!!!!")
+            return Response(status=HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response({"error": str(e)})
     
