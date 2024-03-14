@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Patient,Procedure
 from django.core.validators import FileExtensionValidator
+
 class PatientSerializer(serializers.ModelSerializer): 
     class Meta:
         model=Patient
@@ -37,6 +38,7 @@ class ProcedureSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(f"Invalid status choose from this :{ sta } ###")
         return data
         
+
     
         
         

@@ -1,6 +1,6 @@
 from rest_framework.permissions import BasePermission
 
-class Mypermission(BasePermission):
+class nursepermission(BasePermission):
     
     def has_permission(self, request, view):
         if request.user.groups.filter(name="Nurse's").exists():
@@ -9,4 +9,11 @@ class Mypermission(BasePermission):
 class doctorpermission(BasePermission):
     def has_permission(self, request, view):
         if request.user.groups.filter(name="Doctor's").exists():
+            return True
+        
+
+
+class frontdeskpermission(BasePermission):
+    def has_permission(self, request, view):
+        if request.user.groups.filter(name="Front_Desk").exists():
             return True

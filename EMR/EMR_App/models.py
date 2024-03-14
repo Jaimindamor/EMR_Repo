@@ -50,4 +50,3 @@ class Procedure(models.Model):
         self.procedure_time=self.update_date.time()
         super(Procedure, self).save(*args, **kwargs)
         
-
