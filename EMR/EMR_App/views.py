@@ -1,8 +1,8 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions  import IsAuthenticated
-from .custompermission import doctorpermission
-from rest_framework.status import HTTP_202_ACCEPTED,HTTP_204_NO_CONTENT,HTTP_200_OK,HTTP_404_NOT_FOUND,HTTP_401_UNAUTHORIZED,HTTP_205_RESET_CONTENT
+from .custompermission import doctorpermission,nursepermission,frontdeskpermission
+from rest_framework.status import HTTP_202_ACCEPTED,HTTP_204_NO_CONTENT,HTTP_200_OK,HTTP_404_NOT_FOUND,HTTP_401_UNAUTHORIZED
 from .models import Patient,Procedure
 from .serializers import PatientSerializer,ProcedureSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -15,7 +15,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class PatientAPI(APIView):
     authentication_classes=[JWTAuthentication]
-    permission_classes=[doctorpermission]
+    permission_classes=[nursepermission|frontdeskpermission]
     def get(self,request,format=None):
         id=request.data.get('id')
         if id is not None:
@@ -71,7 +71,7 @@ class PatientAPI(APIView):
 
 class ProcedureAPI(APIView):
     authentication_classes=[JWTAuthentication]
-    permission_classes=[doctorpermission]
+    permission_classes=[nursepermission]
     def get(self,request,format=None):
         id=request.data.get('id')
         if id is not None:
@@ -133,34 +133,36 @@ class ProcedureAPI(APIView):
             try:
                 patient=Procedure.objects.get(id=id)
                 patient.delete()
-                return Response("Data deleted !!!!!!!!",status=HTTP_202_ACCEPTED)
+                return Response({"Data deleted !!!!!!!!"},status=HTTP_202_ACCEPTED)
             except:
-                return Response("Procedure Data Not found !!!!!!!",status=HTTP_404_NOT_FOUND)
+                return Response({"Procedure Data Not found !!!!!!!"},status=HTTP_404_NOT_FOUND)
         else:
-            return Response("Id is not Mentioned !!!!!!!",status=HTTP_204_NO_CONTENT)
+            return Response({"Id is not Mentioned !!!!!!!"},status=HTTP_204_NO_CONTENT)
             
 class LoginAPI(APIView):
     
     def post(self,request):
-        decoded_data= base64.b64decode(request.data.get("info")).decode('UTF-8')
-        split_data=str(decoded_data).split(":")
-        username =split_data[0]
-        password = split_data[1]
-        user=authenticate(username=username,password=password)
-        refresh = RefreshToken.for_user(user)
-        return Response({'token': str(refresh),
-                         'acces_token': str(refresh.access_token)})
+        try:
+            decoded_data= base64.b64decode(request.data.get("info")).decode('UTF-8')
+            username,password=str(decoded_data).split(":")
+            user=authenticate(username=username,password=password)
+            if user :
+                refresh = RefreshToken.for_user(user)
+                return Response({'token': str(refresh),
+                                'acces_token': str(refresh.access_token)})
+            else:
+                return Response({'msg': 'User/Password  is invalid  !!!!!'})
+        except:
+            return Response({'msg': 'Value is not correctly base64 encoded  is invalid  !!!!!'})
 
 class LogoutAPI(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request):
         try:
             refresh_token = request.data["refresh_token"]
-            print(refresh_token)
             token = RefreshToken(refresh_token)
-            print(token)
             token.blacklist()
-            return Response(status=HTTP_205_RESET_CONTENT)
+            return Response({"Token added to blacklist !!!!!!!!"},status=HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)})
     
