@@ -71,7 +71,7 @@ class PatientAPI(APIView):
 
 class ProcedureAPI(APIView):
     authentication_classes=[JWTAuthentication]
-    permission_classes=[nursepermission]
+    permission_classes=[doctorpermission|nursepermission]
     def get(self,request,format=None):
         id=request.data.get('id')
         if id is not None:
