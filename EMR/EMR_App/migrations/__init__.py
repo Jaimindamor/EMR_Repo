@@ -1,0 +1,1 @@
+default_app_config='EMR_App.apps.EmrAppConfig'

@@ -52,6 +52,7 @@ class PatientAPI(APIView):
             if serializer.is_valid():
                 serializer.save()
                 res={'msg':' data saved !!!!!!!!!!!'}
+                send_sms('patient added !!!!!','',to=['+918780612454'],fail_silently=False)
                 return Response(res,status=HTTP_200_OK)
             return Response(serializer.errors,status=HTTP_401_UNAUTHORIZED)
         else:
