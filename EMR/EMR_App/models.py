@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinLengthValidator
 import re
 
+#Custom Validation 
 def check_mobile_number(value):
     reg=r'[1-9]{1}[0-9]{9}'         # r is a convention that indicates a raw string literal to understand regular expression patterns
     if re.findall(reg,value):
@@ -56,7 +57,7 @@ status_choice=(
 class Patient(models.Model):
     first_name=models.CharField(blank=True,max_length=30)
     last_name=models.CharField(blank=True,max_length=30)
-    mobile_number=models.CharField(max_length=10,validators=[MinLengthValidator(10)])
+    mobile_number=models.CharField(max_length=10,validators=[check_mobile_number])
     address=models.CharField(max_length=255,blank=True,null=True)
     gender=models.CharField(max_length=15,choices=gender_choice)
     birthdate=models.DateField(blank=True)
