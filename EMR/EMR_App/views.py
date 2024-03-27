@@ -12,23 +12,17 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 import win32com.client
 import pythoncom
-import requests
+
 # Create your views here.
-def msg():
-    phone_number = '+91(878)061-2454'
-    resp = requests.post('https://textbelt.com/text', {
-    'phone': '8780612454',
-    'message': 'Database updated',
-    'key': 'textbelt',
-    })
-    print(resp.json())
-def send_email():
+
+def send_email(msg,mail):
+    recipient =mail
     pythoncom.CoInitialize()
     outlook = win32com.client.Dispatch("Outlook.Application")
     mail = outlook.CreateItem(0)  # 0 represents mail item
-    mail.To = 'none15779@gmail.com'
+    mail.To =recipient 
     mail.Subject = 'Greetings'
-    mail.Body = 'Hello DataABse is Updated '
+    mail.Body = msg
     mail.Send()
     
 class PatientAPI(APIView):
