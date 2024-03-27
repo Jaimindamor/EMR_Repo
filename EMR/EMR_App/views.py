@@ -10,9 +10,27 @@ from django.contrib.auth import authenticate
 import base64
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
-
+import win32com.client
+import pythoncom
+import requests
 # Create your views here.
-
+def msg():
+    phone_number = '+91(878)061-2454'
+    resp = requests.post('https://textbelt.com/text', {
+    'phone': '8780612454',
+    'message': 'Database updated',
+    'key': 'textbelt',
+    })
+    print(resp.json())
+def send_email():
+    pythoncom.CoInitialize()
+    outlook = win32com.client.Dispatch("Outlook.Application")
+    mail = outlook.CreateItem(0)  # 0 represents mail item
+    mail.To = 'none15779@gmail.com'
+    mail.Subject = 'Greetings'
+    mail.Body = 'Hello DataABse is Updated '
+    mail.Send()
+    
 class PatientAPI(APIView):
     authentication_classes=[JWTAuthentication]
     permission_classes=[nursepermission|frontdeskpermission]
@@ -52,7 +70,6 @@ class PatientAPI(APIView):
             if serializer.is_valid():
                 serializer.save()
                 res={'msg':' data saved !!!!!!!!!!!'}
-                send_sms('patient added !!!!!','',to=['+918780612454'],fail_silently=False)
                 return Response(res,status=HTTP_200_OK)
             return Response(serializer.errors,status=HTTP_401_UNAUTHORIZED)
         else:

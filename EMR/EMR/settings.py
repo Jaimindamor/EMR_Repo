@@ -174,9 +174,8 @@ MEDIA_ROOT=os.path.join(BASE_DIR,"media")
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SMS_BACKEND = 'sms.backends.dummy.SmsBackend'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587  # or the port your SMTP server uses
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'none43208@gmail.com'
-EMAIL_HOST_PASSWORD = 'none@123'
+EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+DEFAULT_FROM_EMAIL = 'none22163@gmail.com'
+ADMINS = [('jaimin.damor', 'jaimin.damor@nsvtech.com')]
+MANAGERS = ADMINS
+EMAIL_SUBJECT_PREFIX = '[EMR_APP] '
