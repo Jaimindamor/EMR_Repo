@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'EMR_App',
     'rest_framework',
     'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist'
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 REST_FRAMEWORK = {
@@ -172,3 +172,8 @@ MEDIA_ROOT=os.path.join(BASE_DIR,"media")
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+DEFAULT_FROM_EMAIL = 'none22163@gmail.com' # default sender email address for outgoing emails
+ADMINS = [('jaimin.damor', 'jaimin.damor@nsvtech.com')]  #defines a list of administrators for your Django project currently using admin only 
+EMAIL_SUBJECT_PREFIX = '[EMR_APP] ' # email subjects will start with [EMR_APP] for all  outgoing emails sent by your Django project

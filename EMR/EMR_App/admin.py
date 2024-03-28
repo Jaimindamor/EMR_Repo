@@ -11,7 +11,7 @@ class PatientAdmin(admin.ModelAdmin):
     
 @admin.register(Procedure)
 class ProcedureAdmin(admin.ModelAdmin):
-    list_display=['id','patient','status','procedure_date','procedure_time','statusReason','category','type','clinic_address','notes','report']
+    list_display=['id','patient','status','procedure_date','procedure_time','statusReason','category','procedure_name','clinic_address','notes','report']
 
     
     

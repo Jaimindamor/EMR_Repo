@@ -10,9 +10,21 @@ from django.contrib.auth import authenticate
 import base64
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
+import win32com.client
+import pythoncom
 
 # Create your views here.
 
+def send_email(msg,mail):
+    recipient =mail
+    pythoncom.CoInitialize()
+    outlook = win32com.client.Dispatch("Outlook.Application")
+    mail = outlook.CreateItem(0)  # 0 represents mail item
+    mail.To =recipient 
+    mail.Subject = 'Greetings'
+    mail.Body = msg
+    mail.Send()
+    
 class PatientAPI(APIView):
     authentication_classes=[JWTAuthentication]
     permission_classes=[nursepermission|frontdeskpermission]
