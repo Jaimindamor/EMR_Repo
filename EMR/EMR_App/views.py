@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions  import IsAuthenticated
-from .custompermission import doctorpermission,nursepermission,frontdeskpermission
+from .custompermission import doctorpermission,nursepermission,frontdeskpermission,patientpermission
 from rest_framework.status import HTTP_202_ACCEPTED,HTTP_204_NO_CONTENT,HTTP_200_OK,HTTP_404_NOT_FOUND,HTTP_401_UNAUTHORIZED
 from .models import Patient,Procedure
 from .serializers import PatientSerializer,ProcedureSerializer
@@ -177,4 +177,70 @@ class LogoutAPI(APIView):
             return Response({"Token added to blacklist !!!!!!!!"},status=HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)})
+
+class PatientView(APIView):
+    permission_classes=[patientpermission]
+    def get(self,request,format=None): 
+        patient=Patient.objects.get(email=request.user.email)
+        serializer=PatientSerializer(patient)
+        procedure=Procedure.objects.filter(patient=patient.id)
+        serializer1=ProcedureSerializer(procedure,many=True)
+        response_data = {
+            'patient_data': serializer.data,
+            'procedure_data': serializer1.data
+        }
+        return Response(response_data)
     
+
+class PatientView_Queryobject(APIView):
+    permission_classes=[patientpermission]
+    def get(self,request,format=None): 
+        patient=Patient.objects.get(email=request.user.email)      
+        procedures=Procedure.objects.filter(patient=patient.id)
+        patient_data={
+            "id": 53,
+        "first_name": patient.first_name,
+        "last_name": patient.last_name,
+        "mobile_number": patient.mobile_number,
+        "address": patient.address,
+        "gender": patient.gender,
+        "birthdate": patient.birthdate,
+        "email": patient.email,
+        "country_code": patient.country_code,
+        "city": patient.city,
+        "state": patient.state,
+        "pincode": patient.pincode,
+        "emergency_contact_name": patient.emergency_contact_name ,
+        "emergency_contact_mobile_number": patient.emergency_contact_mobile_number,
+        "language": patient.language,
+        "create_date":patient.create_date,
+        "update_date": patient.update_date
+        }
+        procedure_data=[]
+        for procedure in procedures:
+            # procedure_report=str(procedure.report).split("\\")
+            # print(procedure_report)
+            print(procedure.report)
+            print(procedure.user)
+            print(procedure.patient)
+            procedure_data.append({ 
+                "id": procedure.id,
+              "report" : str(procedure.report),
+            "status": procedure.status,
+            "statusReason":procedure.statusReason,
+            "procedure_date": procedure.procedure_date,
+            "procedure_time":procedure.procedure_time,
+            "category": procedure.category,
+            "procedure_name": procedure.procedure_name,
+            "clinic_address": procedure.clinic_address,
+            "notes": procedure.notes,
+            "create_date":procedure.create_date,
+            "update_date":procedure.update_date,
+            "user":procedure.user.id,
+            "patient":procedure.patient.id,
+                
+            })
+        response_Data={    "patient_data": patient_data,
+                       "procedure data": procedure_data}
+        return Response(response_Data)
+        

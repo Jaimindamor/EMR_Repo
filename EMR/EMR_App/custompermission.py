@@ -17,3 +17,8 @@ class frontdeskpermission(BasePermission):
     def has_permission(self, request, view):
         if request.user.groups.filter(name="Front_Desk").exists():
             return True
+
+class patientpermission(BasePermission):
+    def has_permission(self, request, view):
+        if request.user.groups.filter(name="Patient").exists():
+            return True
