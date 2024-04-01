@@ -19,7 +19,7 @@ class PatientSerializer(serializers.ModelSerializer):
         if len(emergency_contact_mobile_number)!=10:
             raise serializers.ValidationError("Invalid emergency_contact_mobile_number Length should be 10 #####")
         if gender not in gen:
-            raise serializers.ValidationError(f"Invalid status choose from this :{ gen } ####")
+            raise serializers.ValidationError(f"Invalid gender choose from this :{ gen } ####")
         if len(pincode)!=6:
             raise serializers.ValidationError("Invalid pincode Length should be 6 ###")
         return data

@@ -182,123 +182,30 @@ class PatientView(APIView):
     def get(self,request,format=None): 
         patient=Patient.objects.get(email=request.user.email)
         if patient:
-            serializer=PatientSerializer(patient)
+            patient_serializer=PatientSerializer(patient)
+            patient_data=dict(patient_serializer.data)
             procedure=Procedure.objects.filter(patient=patient.id)
             if procedure:
-                serializer1=ProcedureSerializer(procedure,many=True)
-                
-                response_data = {
-                    "id": serializer.data['id'],
-                    "first_name": serializer.data['first_name'],
-                    "last_name": serializer.data['last_name'],
-                    "mobile_number": serializer.data['mobile_number'],
-                    "address": serializer.data['address'],
-                    "gender": serializer.data['gender'],
-                    "birthdate": serializer.data['birthdate'],
-                    "email": serializer.data['email'],
-                    "country_code": serializer.data['country_code'],
-                    "city": serializer.data['city'],
-                    "state": serializer.data['state'],
-                    "pincode": serializer.data['pincode'],
-                    "emergency_contact_name":serializer.data['emergency_contact_name'] ,
-                    "emergency_contact_mobile_number":serializer.data['emergency_contact_mobile_number'],
-                    "language": serializer.data['language'],
-                    "create_date": serializer.data['create_date'],
-                    "update_date": serializer.data['update_date'],
-                    "procedure_data": serializer1.data,
-                }
-                return Response(response_data,status=HTTP_200_OK)
-            
-            response_Data={    
-                "id": patient.id,
-                "first_name": patient.first_name,
-                "last_name": patient.last_name,
-                "mobile_number": patient.mobile_number,
-                "address": patient.address,
-                "gender": patient.gender,
-                "birthdate": patient.birthdate,
-                "email": patient.email,
-                "country_code": patient.country_code,
-                "city": patient.city,
-                "state": patient.state,
-                "pincode": patient.pincode,
-                "emergency_contact_name": patient.emergency_contact_name ,
-                "emergency_contact_mobile_number": patient.emergency_contact_mobile_number,
-                "language": patient.language,
-                "create_date":patient.create_date,
-                "update_date": patient.update_date,
-                "Procedure List ": "{No procedure conducted !!!!!!!!!!!} "}
-            
-            return Response(response_Data,status=HTTP_200_OK)
+                procedure_serializer=ProcedureSerializer(procedure,many=True)
+                procedure_data=list(procedure_serializer.data)
+                patient_data['Procedure_list']=procedure_data
+                return Response(patient_data,status=HTTP_200_OK)
+            patient_data['Procedure_list']="No procedure Conducted"
+            return Response(patient_data,status=HTTP_200_OK)
         return Response("No Patient Found with this mail ID !!!!!!!!!!",status=HTTP_204_NO_CONTENT)    
         
-
 class PatientView_Queryobject(APIView):
     permission_classes=[patientpermission]
     def get(self,request,format=None): 
-        patient=Patient.objects.get(email=request.user.email)
+        patient=Patient.objects.filter(email=request.user.email).values().first()
+        patient_data=dict(patient)
         if patient:      
-            procedures=Procedure.objects.filter(patient=patient.id)
+            procedures=Procedure.objects.filter(patient=patient['id']).values()
+            procedure_data=[procedure for procedure in procedures]
             if procedures:
-                procedure_data=[]
-                for procedure in procedures:
-                    procedure_data.append({ 
-                        "id": procedure.id,
-                    "report" : str(procedure.report),
-                    "status": procedure.status,
-                    "statusReason":procedure.statusReason,
-                    "procedure_date": procedure.procedure_date,
-                    "procedure_time":procedure.procedure_time,
-                    "category": procedure.category,
-                    "procedure_name": procedure.procedure_name,
-                    "clinic_address": procedure.clinic_address,
-                    "notes": procedure.notes,
-                    "create_date":procedure.create_date,
-                    "update_date":procedure.update_date,
-                    "user":procedure.user.id,
-                    "patient":procedure.patient.id,
-                    })
-                response_Data={    
-                "id": patient.id,
-                "first_name": patient.first_name,
-                "last_name": patient.last_name,
-                "mobile_number": patient.mobile_number,
-                "address": patient.address,
-                "gender": patient.gender,
-                "birthdate": patient.birthdate,
-                "email": patient.email,
-                "country_code": patient.country_code,
-                "city": patient.city,
-                "state": patient.state,
-                "pincode": patient.pincode,
-                "emergency_contact_name": patient.emergency_contact_name ,
-                "emergency_contact_mobile_number": patient.emergency_contact_mobile_number,
-                "language": patient.language,
-                "create_date":patient.create_date,
-                "update_date": patient.update_date,
-                "Procedure List ": procedure_data}
-                return Response(response_Data,status=HTTP_200_OK)
-            
-            response_Data={    
-                "id": patient.id,
-                "first_name": patient.first_name,
-                "last_name": patient.last_name,
-                "mobile_number": patient.mobile_number,
-                "address": patient.address,
-                "gender": patient.gender,
-                "birthdate": patient.birthdate,
-                "email": patient.email,
-                "country_code": patient.country_code,
-                "city": patient.city,
-                "state": patient.state,
-                "pincode": patient.pincode,
-                "emergency_contact_name": patient.emergency_contact_name ,
-                "emergency_contact_mobile_number": patient.emergency_contact_mobile_number,
-                "language": patient.language,
-                "create_date":patient.create_date,
-                "update_date": patient.update_date,
-                "Procedure List ": "{No procedure conducted !!!!!!!!!!!} "}
-            
-            return Response(response_Data,status=HTTP_200_OK)
+                patient_data["Procedure List "]=procedure_data
+                return Response(patient_data,status=HTTP_200_OK)
+            patient_data["Procedure List "]="No procedure Conducted"
+            return Response(patient_data,status=HTTP_200_OK)
         
         return Response("No Patient Found with this mail ID !!!!!!!!!!",status=HTTP_204_NO_CONTENT)
