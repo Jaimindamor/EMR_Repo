@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions  import IsAuthenticated
-from .custompermission import doctorpermission,nursepermission,frontdeskpermission
+from .custompermission import doctorpermission,nursepermission,frontdeskpermission,patientpermission
 from rest_framework.status import HTTP_202_ACCEPTED,HTTP_204_NO_CONTENT,HTTP_200_OK,HTTP_404_NOT_FOUND,HTTP_401_UNAUTHORIZED
 from .models import Patient,Procedure
 from .serializers import PatientSerializer,ProcedureSerializer
@@ -12,7 +12,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 import win32com.client
 import pythoncom
-
 # Create your views here.
 
 def send_email(msg,mail):
@@ -177,4 +176,36 @@ class LogoutAPI(APIView):
             return Response({"Token added to blacklist !!!!!!!!"},status=HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)})
-    
+
+class PatientView(APIView):
+    permission_classes=[patientpermission]
+    def get(self,request,format=None): 
+        patient=Patient.objects.get(email=request.user.email)
+        if patient:
+            patient_serializer=PatientSerializer(patient)
+            patient_data=dict(patient_serializer.data)
+            procedure=Procedure.objects.filter(patient=patient.id)
+            if procedure:
+                procedure_serializer=ProcedureSerializer(procedure,many=True)
+                procedure_data=list(procedure_serializer.data)
+                patient_data['Procedure_list']=procedure_data
+                return Response(patient_data,status=HTTP_200_OK)
+            patient_data['Procedure_list']="No procedure Conducted"
+            return Response(patient_data,status=HTTP_200_OK)
+        return Response("No Patient Found with this mail ID !!!!!!!!!!",status=HTTP_204_NO_CONTENT)    
+        
+class PatientView_Queryobject(APIView):
+    permission_classes=[patientpermission]
+    def get(self,request,format=None): 
+        patient=Patient.objects.filter(email=request.user.email).values().first()
+        patient_data=dict(patient)
+        if patient:      
+            procedures=Procedure.objects.filter(patient=patient['id']).values()
+            procedure_data=[procedure for procedure in procedures]
+            if procedures:
+                patient_data["Procedure List "]=procedure_data
+                return Response(patient_data,status=HTTP_200_OK)
+            patient_data["Procedure List "]="No procedure Conducted"
+            return Response(patient_data,status=HTTP_200_OK)
+        
+        return Response("No Patient Found with this mail ID !!!!!!!!!!",status=HTTP_204_NO_CONTENT)
