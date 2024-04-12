@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Patients</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e; /* Dark background color */
+            color: #fff; /* White text color */
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 50px;
+        }
+        
+        .form-container {
+            flex: 1;
+            margin-right: 50px;
+        }
+        
+        .sidebar {
+            flex: 0 0 200px;
+            border-left: 1px solid #333; /* Darker border color */
+            padding-left: 20px;
+        }
+        
+        h1, h2 {
+            margin-bottom: 20px;
+            color: #fff; /* White header text color */
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            color: #fff; /* White table text color */
+        }
+        
+        table th, table td {
+            padding: 10px;
+            border: 1px solid #333; /* Darker border color */
+        }
+        
+        table th {
+            background-color: #222; /* Darker table header background color */
+            font-weight: bold;
+            text-align: left;
+        }
+        
+        table tr:nth-child(even) {
+            background-color: #333; /* Dark table row background color */
+        }
+        
+        form {
+            background-color: #333; /* Dark form background color */
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); /* White shadow for contrast */
+        }
+        
+        input[type="text"], button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #444; /* Darker input border color */
+            border-radius: 5px;
+            box-sizing: border-box;
+            background-color: #555; /* Darker input background color */
+            color: #fff; /* White input text color */
+        }
+        
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        .message {
+            margin-top: 20px;
+            color: #007bff;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <div class="form-container">
+            <h2>Patient Entry Form</h2>
+            
+    <form method="post" action="/Register_user/">
+        {% csrf_token %}
+        <label for="patient_name">Username:</label>
+        <input type="text" name="username" required>
+        <br>
+        <label for="blood_group">Password:</label>
+        <input type="text" name="password" required>
+        <br>
+        <label for="patient_name">Emial ID :</label>
+        <input type="text" name="email" required>
+        <br>
+        <label for="blood_group">Group ID :</label>
+        <input type="text" name="groups" required>
+        <br>
+        <button type="submit" >Submit</button>
+    </form>
+       
+    {% if data_saved %}
+    <script>
+        alert("Data saved successfully!");
+    </script>
+    {% endif %}
+</body>
+
+</html>
+
+
+{% endblock %}

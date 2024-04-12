@@ -1,0 +1,77 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #222; /* Dark background color */
+            color: #fff; /* Light text color */
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #333; /* Darker container background color */
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); /* Lighter shadow */
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .options a {
+            display: block;
+            padding: 20px;
+            background-color: #007bff; /* Default button color */
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .options a:hover {
+            background-color: #0056b3; /* Darker button color on hover */
+        }
+    </style>
+<body>
+    <div class="container">
+        <h1>Welcome to the EMR Manage Page</h1>
+        <div class="options">
+            <a href="/managepatient/">Manage Patients</a>
+            <a href="/manageprocedure/">Manage Procedures</a>
+        </div>
+    </div>
+</body>
+</html>
+
+    <script>
+        // Retrieve token from local storage
+        var token = localStorage.getItem('token');
+
+        // Example of using token in requests to backend
+        fetch('/PatientAPI/', {
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            // Handle response
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

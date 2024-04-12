@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #222; /* Dark background color */
+            color: #fff; /* Light text color */
+        }
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 20px;
+            background-color: #333; /* Darker container background color */
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); /* Lighter shadow */
+        }
+        .login-container h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .login-form label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .login-form input[type="text"],
+        .login-form input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #555; /* Darker border color */
+            border-radius: 5px;
+            background-color: #444; /* Darker input background color */
+            color: #fff; /* Light text color */
+        }
+        .login-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff; /* Default button color */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .login-form button:hover {
+            background-color: #0056b3; /* Darker button color on hover */
+        }
+    </style>
+</head>
+<body>
+
+   
+    <div class="login-container">
+        <h1>Login</h1>
+        <form class="login-form" id="loginForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password">
+            <button type="button" onclick="login()">Login</button>
+            <br>
+            <br>
+            
+            <a href="/register/" style="float: right;">Register</a>
+            <br>
+        </form>
+    </div>
+
+    <script>
+        function login() {
+            var username = document.getElementById('username').value.trim();
+            var password = document.getElementById('password').value.trim();
+            var info = btoa(username + ':' + password); // Encode username:password to base64
+            console.log(info)
+            fetch('/LoginAPI/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ info: info }), // Send base64 encoded value to server
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (data.token) {
+                    // User is authenticated, redirect to home page 
+					localStorage.setItem('token', data.token); 
+                    window.location.href = '/manage/';
+                } else {
+                    // Authentication failed, display error message or take appropriate action
+                    alert('Login failed. Please check your credentials.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Handle error
+            });
+        }
+    </script>
+</body>
+</html>
+
+
+
+{% endblock %}

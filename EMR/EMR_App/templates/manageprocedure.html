@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Procedure</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e; /* Dark background color */
+            color: #fff; /* White text color */
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 50px;
+        }
+        
+        .form-container {
+            flex: 1;
+            margin-right: 50px;
+        }
+        
+        .sidebar {
+            flex: 0 0 200px;
+            border-left: 1px solid #333; /* Darker border color */
+            padding-left: 20px;
+        }
+        
+        h1, h2 {
+            margin-bottom: 20px;
+            color: #fff; /* White header text color */
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            color: #fff; /* White table text color */
+        }
+        
+        table th, table td {
+            padding: 10px;
+            border: 1px solid #333; /* Darker border color */
+        }
+        
+        table th {
+            background-color: #222; /* Darker table header background color */
+            font-weight: bold;
+            text-align: left;
+        }
+        
+        table tr:nth-child(even) {
+            background-color: #333; /* Dark table row background color */
+        }
+        
+        form {
+            background-color: #333; /* Dark form background color */
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); /* White shadow for contrast */
+        }
+        
+        input[type="text"], button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #444; /* Darker input border color */
+            border-radius: 5px;
+            box-sizing: border-box;
+            background-color: #555; /* Darker input background color */
+            color: #fff; /* White input text color */
+        }
+        
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        .message {
+            margin-top: 20px;
+            color: #007bff;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h1>Procedures Data of Patient</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Register_by </th>
+                <th>procedure_mobile_number</th>
+                <th>status</th>
+                <th>statusReason</th>
+                <th>procedure_date</th>
+                <th>procedure_time</th>
+                <th>category</th>
+                <th>procedure_name</th>
+                <th>clinic_address</th>
+                <th>notes</th>
+                <th>report</th>
+                <th>Create Date</th>
+                <th>Update Date</th>          
+            </tr>
+        </thead>
+        <tbody>
+            {% for procedure in procedures %}
+                <tr>
+                    <td>{{ procedure.id }}</td>
+                    <td>{{ procedure.user }}</td>
+                    <td>{{ procedure.patient }}</td>
+                    <td>{{ procedure.status }}</td>
+                    <td>{{ procedure.statusReason }}</td>
+                    <td>{{ procedure.procedure_date }}</td>
+                    <td>{{ procedure.procedure_time }}</td>
+                    <td>{{ procedure.category }}</td>
+                    <td>{{ procedure.procedure_name }}</td>
+                    <td>{{ procedure.clinic_address }}</td>
+                    <td>{{ procedure.notes }}</td>
+                    <td>{{ procedure.report }}</td>
+                    <td>{{ procedure.create_date }}</td>
+                    <td>{{ procedure.update_date }}</td>
+                    
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+            <div id="message" class="message"></div>
+        </div>
+        <div class="sidebar">
+            <h2>Options</h2>
+            <ul>
+                <li><a href="/addprocedure/">Add procedure</a></li>
+                <li><a href="/deleteprocedure/">Delete procedure</a></li>
+                <li><a href="/updateprocedure/">Update procedure</a></li>
+                <li><a href="/manage/"><b>Manage Option </b></a></li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
+
+{% endblock %}
