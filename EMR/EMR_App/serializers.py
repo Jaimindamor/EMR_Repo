@@ -1,7 +1,23 @@
 from rest_framework import serializers
 from .models import Patient,Procedure
 from django.core.validators import FileExtensionValidator
+from django.contrib.auth.models import User,Group
 
+class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True) # (write_only=True) only be used for input data  and it should not be included when serializing the object for output
+    groups = serializers.PrimaryKeyRelatedField(queryset=Group.objects.all(), many=True, required=False) # (PrimaryKeyRelatedField)serializer field used for representing relationships to other models via their primary keys.,(queryset=Group.objects.all())retrieves all the Group objects from the database.
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password', 'groups')
+    
+    def create(self, validated_data):
+        groups_data = validated_data.pop('groups', None)  #This line essentially extracts the groups_id  (if any) from the validated data
+        user = User.objects.create_user(**validated_data)
+        if groups_data:
+            user.groups.set(groups_data) #assignsthe specified groups  tpo user
+        return user
+        
 class PatientSerializer(serializers.ModelSerializer): 
     class Meta:
         model=Patient
