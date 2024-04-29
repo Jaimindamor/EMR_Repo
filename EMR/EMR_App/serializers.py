@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Patient,Procedure
+from .models import Patient_data,Procedure_data
 from django.core.validators import FileExtensionValidator
 from django.contrib.auth.models import User,Group
 
@@ -20,7 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
         
 class PatientSerializer(serializers.ModelSerializer): 
     class Meta:
-        model=Patient
+        model=Patient_data
         fields='__all__'
     
     # object-level Validation
@@ -41,9 +41,9 @@ class PatientSerializer(serializers.ModelSerializer):
         return data
 
 class ProcedureSerializer(serializers.ModelSerializer):
-    report=serializers.FileField(validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
+    #report=serializers.FileField(validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
     class Meta:
-        model=Procedure
+        model=Procedure_data
         fields='__all__'
         
     # object-level Validation

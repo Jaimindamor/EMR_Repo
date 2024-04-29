@@ -104,10 +104,10 @@
         <div class="form-container">
             <h2>Procedure Entry Form</h2>
             
-    <form method="post" action="/addproceduredata/">
+    <form method="post" action="/ProcedureAPI/" enctype="multipart/form-data">
         {% csrf_token %}
         <label for="patient">Select Patient_id :</label>
-        <select id="patient" name="patient_id">
+        <select id="patient" name="patient">
             {% for patient in patients %}
                 <option value="{{ patient.id }}" >{{ patient.first_name}}</option>
             {% endfor %}

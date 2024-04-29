@@ -164,5 +164,57 @@
 </body>
 </html>
 
+<script>
+    // Retrieve token from local storage
+    var token = localStorage.getItem('token_');
 
+    function patientfunc() {
+        console.log(token);
+
+        // Example of using token in requests to backend
+        fetch('/PatientAPI/', {
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                // Redirect to the patient management page
+                window.location.href = '/managepatient/';
+            } else {
+                console.error('Error:', response.statusText);
+                alert('Error accessing patient data!');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error accessing patient data!');
+        });
+    }
+
+    function procedurefunc() {
+        console.log(token);
+
+        fetch('/ProcedureAPI/', {
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                // Redirect to the procedure management page
+                window.location.href = '/manageprocedure/';
+            } else {
+                console.error('Error:', response.statusText);
+                alert('Error accessing procedure data!');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error accessing procedure data!');
+        });
+    }
+</script>
 {% endblock %}

@@ -104,7 +104,7 @@
         <div class="form-container">
             <h2>Patient Entry Form</h2>
             
-    <form method="post" action="/addpatientdata/">
+    <form method="post" action="/PatientAPI/">
         {% csrf_token %}
         <label for="patient_name">Patient first_name:</label>
         <input type="text" name="first_name" required>

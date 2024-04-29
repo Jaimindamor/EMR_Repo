@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% block content %}
 
 <!DOCTYPE html>
@@ -88,10 +89,10 @@
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data);
-                if (data.token) {
+                console.log(data.acces_token);
+                if (data.acces_token) {
                     // User is authenticated, redirect to home page 
-					localStorage.setItem('token', data.token); 
+					localStorage.setItem('token_', data.acces_token); 
                     window.location.href = '/manage/';
                 } else {
                     // Authentication failed, display error message or take appropriate action

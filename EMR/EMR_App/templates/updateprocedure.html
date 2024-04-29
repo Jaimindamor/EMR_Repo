@@ -104,42 +104,42 @@
         <div class="form-container">
             <h2>Update Procedure Data </h2>
             
-            <form method="post" action="/updateproceduredata/">
+            <form id="updateform" enctype="multipart/form-data">
                 {% csrf_token %}
                 <label for="Procedure">Procedure ID:</label>
-                <input type="text" name="id" >
+                <input type="text" name="id" id="id" >
                 <br>
                 <label for="Procedure">Procedure patient_id:</label>
-                <input type="text" name="patient" >
+                <input type="text" name="patient" id="patient" >
                 <br>
                 <label for="blood_group">Procedure status:</label>
-                <input type="text" name="status" >
+                <input type="text" name="status" id="status" >
                 <br>
                 <label for="Procedure">statusReason :</label>
-                <input type="text" name="statusReason" >
+                <input type="text" name="statusReason"  id="statusReason">
                 <br>
                 <label for="Procedure">procedure_date</label>
-                <input type="text" name="procedure_date" >
+                <input type="text" name="procedure_date"  id="procedure_date">
                 <br>
                 <label for="Procedure">procedure_time:</label>
-                <input type="text" name="procedure_time" >
+                <input type="text" name="procedure_time"  id="procedure_time">
                 <br>
                 <label for="Procedure">category:</label>
-                <input type="text" name="category" >
+                <input type="text" name="category"  id="category">
                 <br>
                 <label for="Procedure">procedure_name:</label>
-                <input type="text" name="procedure_name" >
+                <input type="text" name="procedure_name"  id="procedure_name">
                 <br>
                 <label for="Procedure">clinic_address:</label>
-                <input type="text" name="clinic_address" >
+                <input type="text" name="clinic_address"  id="clinic_address" >
                 <br>
                 <label for="Procedure">notes:</label>
-                <input type="text" name="notes" >
+                <input type="text" name="notes"  id="notes">
                 <br>
                 <label for="Procedure">report:</label>
-                <input type="text" name="report" >
+                <input type="file" name="report"  id="report" >
                 <br>
-                <button type="submit" >Update</button>
+                <button type="button" onclick="updateProcedure()" >Update</button>
             </form>
         <div id="message" class="message"></div>
         </div>
@@ -153,11 +153,94 @@
             </ul>
         </div>
     </div>
-    {% if data_saved %}
+
     <script>
-        alert("Data Updated  successfully!");
+        var token = localStorage.getItem('token');
+        function updateProcedure() {
+            var formData = {};
+
+            var id = document.getElementById("id").value;
+            var patient = document.getElementById("patient").value;
+            var status = document.getElementById("status").value;
+            var statusReason = document.getElementById("statusReason").value;
+            var procedure_date = document.getElementById("procedure_date").value;
+            var procedure_time = document.getElementById("procedure_time").value;
+            var category = document.getElementById("category").value;
+            var procedure_name = document.getElementById("procedure_name").value;
+            var clinic_address = document.getElementById("clinic_address").value;
+            var notes = document.getElementById("notes").value;
+            var report = document.getElementById("report").files[0];
+
+            addFieldValueIfNotEmpty(formData, "id", id);
+            addFieldValueIfNotEmpty(formData, "patient", patient);
+            addFieldValueIfNotEmpty(formData, "status", status);
+            addFieldValueIfNotEmpty(formData, "statusReason", statusReason);
+            addFieldValueIfNotEmpty(formData, "procedure_date", procedure_date);
+            addFieldValueIfNotEmpty(formData, "procedure_time", procedure_time);
+            addFieldValueIfNotEmpty(formData, "category", category);
+            addFieldValueIfNotEmpty(formData, "procedure_name", procedure_name);
+            addFieldValueIfNotEmpty(formData, "category", category);
+            addFieldValueIfNotEmpty(formData, "procedure_name", procedure_name);
+            addFieldValueIfNotEmpty(formData, "clinic_address", clinic_address);
+            addFieldValueIfNotEmpty(formData, "notes", notes);
+            addFieldfileIfNotEmpty(formData, "report", report); 
+            console.log(formData)
+
+            fetch('/ProcedureAPI/', {
+                method: 'PUT',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Update UI or show success message
+                    alert("Procedure Data is Updated successfully !!!!");
+                    window.location.reload(); // Refresh the page
+                } else {
+                    // Handle error response
+                    document.getElementById('message').innerText = 'Failed to update procedure data.';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Handle network errors
+                document.getElementById('message').innerText = 'Network error occurred. Please try again.';
+            });
+        }
+
+        function addFieldValueIfNotEmpty(formData, fieldName, value) {
+            // Add field to formData only if value is not empty
+            if (value && (value.trim() !== "")) {
+                formData[fieldName] = value;
+            }
+        }
+        function addFieldfileIfNotEmpty(formData, fieldName, value) {
+            // Add field to formData only if value is not empty
+            if (value) {
+                formData[fieldName] = value;
+            }
+        }
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Extract CSRF token from cookies
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
     </script>
-    {% endif %}
+
 </body>
 
 </html>

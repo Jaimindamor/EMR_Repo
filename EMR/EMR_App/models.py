@@ -4,7 +4,7 @@ from django.utils import timezone
 
 # Create your models here.
 
-class Patient(models.Model):
+class Patient_data(models.Model):
     first_name=models.CharField(max_length=30)
     last_name=models.CharField(max_length=30)
     mobile_number=models.CharField(max_length=10)
@@ -24,13 +24,13 @@ class Patient(models.Model):
 
     def save(self, *args, **kwargs):    
         self.update_date = timezone.now()
-        super(Patient, self).save(*args, **kwargs)
+        super(Patient_data, self).save(*args, **kwargs)
     def __str__(self):
         return str(self.mobile_number)
                    
-class Procedure(models.Model):
+class Procedure_data(models.Model):
     user=models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
-    patient=models.ForeignKey(Patient, on_delete=models.SET_NULL,null=True)
+    patient=models.ForeignKey(Patient_data, on_delete=models.SET_NULL,null=True)
     status=models.CharField(max_length=20)
     statusReason=models.CharField(blank=True,max_length=80,null=True)
     procedure_date=models.DateField(blank=True, null=True)
@@ -48,5 +48,5 @@ class Procedure(models.Model):
         self.update_date = timezone.now()
         self.procedure_date=self.update_date.date()
         self.procedure_time=self.update_date.time()
-        super(Procedure, self).save(*args, **kwargs)
+        super(Procedure_data, self).save(*args, **kwargs)
         
